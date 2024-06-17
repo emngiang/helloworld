@@ -14,8 +14,10 @@
         // Hide banner if the browser is Safari
         if (isSafari()) {
             AF('banners', 'hideBanner');
+            console.log("Safari detected: Hiding the banner")
         } else {
             AF('banners', 'showBanner');
+            console.log("Not Safari: Showing the banner");
         }
     </script>
     <meta charset="UTF-8">
