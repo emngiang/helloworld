@@ -8,8 +8,7 @@
 
         // Function to detect if the browser is Safari
         function isSafari() {
-            var ua = navigator.userAgent.toLowerCase();
-            return (ua.indexOf('safari') != -1 && ua.indexOf('chrome') == -1);
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         }
 
         // Hide banner if the browser is Safari
