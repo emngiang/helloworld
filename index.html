@@ -5,14 +5,11 @@
     <script>
         !function (t, e, n, s, a, c, i, o, p) { t.AppsFlyerSdkObject = a, t.AF = t.AF || function () { (t.AF.q = t.AF.q || []).push([Date.now()].concat(Array.prototype.slice.call(arguments))) }, t.AF.id = t.AF.id || i, t.AF.plugins = {}, o = e.createElement(n), p = e.getElementsByTagName(n)[0], o.async = 1, o.src = "https://websdk.appsflyer.com?" + (c.length > 0 ? "st=" + c.split(",").sort().join(",") + "&" : "") + (i.length > 0 ? "af_id=" + i : ""), p.parentNode.insertBefore(o, p) }(window, document, "script", 0, "AF", "banners", { banners: { key: "37436911-431c-4703-b35c-2a38be30bb1b" } });
 
-        // Detect if the browser is Safari
-        function isSafari() {
-            return /^((?!chrome|android|crios).)*safari/i.test(navigator.userAgent);
-        }
-
-        // Check if the app is installed by looking for the LocalStorage item
-        function isAppInstalled() {
-            return localStorage.getItem('brandAppInstalled') === 'true';
+        // Function to get a cookie value by name
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
         }
 
         // Display the detection result and user agent on the webpage
@@ -32,20 +29,25 @@
                 console.log("Safari detected: Hiding the banner");
                 AF('banners', 'hideBanner');
                 browserInfoElement.innerText = "Browser Detected: Safari";
-
-                // Check if the app is installed and display the status
-                if (isAppInstalled()) {
-                    console.log("App is installed");
-                    appStatusElement.innerText = "App Status: Installed";
-                } else {
-                    console.log("App is not installed");
-                    appStatusElement.innerText = "App Status: Not Installed";
-                }
             } else {
                 console.log("Not Safari: Showing the banner");
                 AF('banners', 'showBanner');
                 browserInfoElement.innerText = "Browser Detected: Not Safari";
             }
+
+            // Check if the app is installed via cookie and display the status
+            if (getCookie('brandAppInstalled') === 'true') {
+                console.log("App is installed");
+                appStatusElement.innerText = "Local Storage - brandAppInstalled = true";
+            } else {
+                console.log("App is not installed");
+                appStatusElement.innerText = "Local Storage - brandAppInstalled = false";
+            }
+        }
+
+        // Detect if the browser is Safari
+        function isSafari() {
+            return /^((?!chrome|android|crios).)*safari/i.test(navigator.userAgent);
         }
     </script>
     <meta charset="UTF-8">
