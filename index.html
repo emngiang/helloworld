@@ -10,6 +10,11 @@
             return /^((?!chrome|android|crios).)*safari/i.test(navigator.userAgent);
         }
 
+        // Check if the app is installed
+        function isAppInstalled() {
+            return localStorage.getItem('brandAppInstalled') === 'true';
+        }
+
         // Display the detection result and user agent on the webpage
         function displayBrowserInfo() {
             const browserInfoElement = document.getElementById('browserInfo');
@@ -21,11 +26,17 @@
             // Display the user agent on the webpage
             userAgentElement.innerText = "User Agent: " + navigator.userAgent;
 
-            // Check if the browser is Safari
+            // Check if the browser is Safari and if the app is installed
             if (isSafari()) {
-                console.log("Safari detected: Hiding the banner");
-                AF('banners', 'hideBanner');
-                browserInfoElement.innerText = "Browser Detected: Safari";
+                if (isAppInstalled()) {
+                    console.log("Safari and app installed: Hiding the banner");
+                    AF('banners', 'hideBanner');
+                    browserInfoElement.innerText = "Browser Detected: Safari, App Installed";
+                } else {
+                    console.log("Safari and app not installed: Showing the banner");
+                    AF('banners', 'showBanner');
+                    browserInfoElement.innerText = "Browser Detected: Safari, App Not Installed";
+                }
             } else {
                 console.log("Not Safari: Showing the banner");
                 AF('banners', 'showBanner');
