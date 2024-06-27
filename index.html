@@ -10,7 +10,7 @@
             return /^((?!chrome|android|crios).)*safari/i.test(navigator.userAgent);
         }
 
-        // Check if the app is installed
+        // Check if the app is installed by looking for the LocalStorage item
         function isAppInstalled() {
             return localStorage.getItem('brandAppInstalled') === 'true';
         }
@@ -19,6 +19,7 @@
         function displayBrowserInfo() {
             const browserInfoElement = document.getElementById('browserInfo');
             const userAgentElement = document.getElementById('userAgent');
+            const appStatusElement = document.getElementById('appStatus');
 
             // Print the user agent to the console
             console.log("User Agent:", navigator.userAgent);
@@ -26,16 +27,19 @@
             // Display the user agent on the webpage
             userAgentElement.innerText = "User Agent: " + navigator.userAgent;
 
-            // Check if the browser is Safari and if the app is installed
+            // Check if the browser is Safari
             if (isSafari()) {
+                console.log("Safari detected: Hiding the banner");
+                AF('banners', 'hideBanner');
+                browserInfoElement.innerText = "Browser Detected: Safari";
+
+                // Check if the app is installed and display the status
                 if (isAppInstalled()) {
-                    console.log("Safari and app installed: Hiding the banner");
-                    AF('banners', 'hideBanner');
-                    browserInfoElement.innerText = "Browser Detected: Safari, App Installed";
+                    console.log("App is installed");
+                    appStatusElement.innerText = "App Status: Installed";
                 } else {
-                    console.log("Safari and app not installed: Showing the banner");
-                    AF('banners', 'showBanner');
-                    browserInfoElement.innerText = "Browser Detected: Safari, App Not Installed";
+                    console.log("App is not installed");
+                    appStatusElement.innerText = "App Status: Not Installed";
                 }
             } else {
                 console.log("Not Safari: Showing the banner");
@@ -62,7 +66,8 @@
         }
 
         #browserInfo,
-        #userAgent {
+        #userAgent,
+        #appStatus {
             font-size: 18px;
             margin-top: 20px;
             color: #333;
@@ -75,6 +80,7 @@
     <button onclick="displayMessage()">Click Me</button>
     <div id="browserInfo"></div>
     <div id="userAgent"></div>
+    <div id="appStatus"></div>
 
     <script>
         function displayMessage() {
